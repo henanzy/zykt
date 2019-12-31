@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.hot.dao.FyFlDao">
+	<resultMap type="FyFl" id="fyfl">
+		<id property="id" column="id"/>
+		<result property="fyfl" column="fyfl"/>
+		<result property="dj" column="dj"/>
+		<result property="ssms" column="ssms"/>
+		<result property="fl" column="fl"/>
+		<result property="yh" column="yh"/>
+		<result property="xqm" column="xqm"/>
+	</resultMap>
+	
+	<select id="byFyFl" resultMap="fyfl" parameterType="FyFl">
+	select id ,fyfl,dj,yh from k_FYFL where fyfl=#{id}
+	</select>
+	
+
+	<select id="find" resultMap="fyfl">
+		select distinct f.fyfl,f.id,f.xqm,f.dj,f.ssms,f.yh from  k_FyFl f,k_yhb1 y
+	</select>
+
+	<insert id="Insert" parameterType="FyFl">
+		insert into k_FyFl
+		(xqm,fyfl,dj,ssms,yh)
+		values(#{xqm},#{fyfl},#{dj},#{ssms},#{yh})
+	</insert>
+
+	<delete id="delete" parameterType="FyFl">
+		delete from k_FyFl
+		where id=#{id}
+	</delete>
+	
+	<update id="update" parameterType="FyFl">
+		update k_FyFl set xqm=#{xqm},
+		fyfl=#{fyfl},dj=#{dj},ssms=#{ssms},yh=#{yh}
+		where id=#{id}
+	</update>
+
+</mapper>

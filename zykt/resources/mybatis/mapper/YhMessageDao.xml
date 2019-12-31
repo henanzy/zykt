@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.hot.dao.YhMessageDao">
+	<resultMap type="YhMessage" id="YhMessage">
+		<result property="id" column="id" />
+		<result property="yhbh" column="yhbh" />
+		<result property="cgbh" column="cgbh" />
+		<result property="ch" column="ch" />
+		<result property="ssgs" column="ssgs" />
+		<result property="xqm" column="xqm" />
+		<result property="ldh" column="ldh" />
+		<result property="yf" column="yf"/>
+		<result property="dyh" column="dyh" />
+		<result property="hh" column="hh" />
+		<result property="fpdz" column="fpdz" />
+		<result property="mj" column="mj" />
+		<result property="yhlx" column="yhlx" />
+		<result property="yhxm" column="yhxm" />
+		<result property="lxdh" column="lxdh" />  
+		<result property="bz" column="bz" />
+		<result property="xqh" column="xqh" />
+		<result property="zq" column="zq" />
+		<result property="jzqip" column="jzqip" />
+		<result property="jzqport" column="jzqport" />
+		<result property="ccbh" column="ccbh"/>
+	</resultMap>
+	<resultMap id="map" type="java.util.HashMap"></resultMap>
+ 
+
+  
+	    <select id="findLd" resultMap="map" >
+		select distinct ldh from k_yhb1 where xqm=#{xqm} order by ldh
+
+	</select>
+	
+	<select id="findDy" resultMap="map" >
+		select distinct dyh from k_yhb1 where xqm=#{xqm} and ldh=#{ldh} order by dyh
+
+	</select>
+	
+	<select id="findjzqnet" resultMap="map" >
+	 select distinct y.jzqnet,j.jzqip,j.jzqport from k_yhb1 y,k_jzqb5 j  where y.jzqnet=j.jzqnet and xqh=#{xqh}
+	</select>
+	<select id="findch" parameterType="YhMessage"   resultMap="YhMessage">
+	select distinct yh.ch, jzq.jzqip, jzq.jzqport,yh.xqh,yh.ldh,yh.dyh,yh.ccbh from k_yhb1  yh,k_jzqb5 jzq where  yh.jzqnet=jzq.jzqnet and yhbh=#{yhbh} and fpdz=#{fpdz}
+	</select>
+	<select id="find"   resultMap="YhMessage" >
+		select distinct top 1500  yhbh ,cgbh,ldh,dyh,fpdz  from  k_yhb1   where xqh is null
+	</select>
+	<select id="xfind"   resultMap="YhMessage">
+   select distinct xqh from k_yhb1 where xqh is not null
+   </select>
+	
+	<insert id="addYh"   parameterType="YhMessage" >
+		insert into k_yhb1
+		(yhbh,cgbh,ssgs,xqm,ldh,dyh,hh,fpdz,mj,yhlx,yhxm,lxdh,bz)
+		values
+		  (#{yhbh},#{cgbh},#{ssgs},#{xqm},#{ldh},#{dyh},#{hh},#{fpdz},#{mj},#{yhlx},#{yhxm},#{lxdh},#{bz})
+	</insert>
+	
+	<update id="updateYh" parameterType="YhMessage">
+		update k_yhb1 
+		set
+		yhbh=#{yhbh},cgbh=#{cgbh},xqm=#{xqm},ssgs=#{ssgs},ldh=#{ldh},dyh=#{dyh},hh=#{hh},
+		fpdz=#{fpdz},mj=#{mj},yhlx=#{yhlx},
+		yhxm=#{yhxm},lxdh=#{lxdh},bz=#{bz}
+		where id=#{id}
+	</update>
+	
+	<update id="deleteYh" >
+		
+      delete from k_yhb1
+		where id=#{id}
+	</update>
+	
+	<select id="findByTerm"   resultMap="YhMessage" >
+		select  *  from  k_yhb1  
+		<where>
+		
+         <if test="yhbh!=null and yhbh!=''">
+            and yhbh like '%'+#{yhbh}+'%'
+         </if>
+         
+         <if test="yhxm!=null and yhxm!=''">
+            and yhxm like '%'+#{yhxm}+'%'
+         </if>
+         
+         <if test="xqm!=null and xqm!=''">
+            and xqm like '%'+#{xqm}+'%'
+         </if>
+
+      </where>
+
+	</select>
+	
+	<select id="findXqm" resultMap="map">
+		select distinct xqm  from  k_yhb1  
+	</select>
+   <select id="findCg" parameterType="YhMessage"   resultMap="YhMessage">
+	select distinct
+		 cg.cgbh , jzq.jzqip, jzq.jzqport,yh.xqh
+	 from   k_yhb1  yh,  k_cgb3  cg,  k_jzqb5  jzq
+	 where yh.cgbh=cg.cgbh  
+	 and   cg.jzqnet=jzq.jzqnet and yhbh=#{yhbh} and fpdz=#{fpdz}
+	</select>
+	<select  id="findJzq" parameterType="YhMessage" resultMap="YhMessage" >
+	select distinct
+		 cg.cgbh , jzq.jzqip, jzq.jzqport,yh.xqh
+	 from   k_yhb1  yh,  k_cgb3  cg,  k_jzqb5  jzq
+	 where yh.cgbh=cg.cgbh  
+	 and   cg.jzqnet=jzq.jzqnet and yh.yhbh=#{yhbh}
+	</select>
+	<insert id="updateYf" parameterType="YhMessage">
+	update k_yhb1 set yf=#{yf} where yzbh=#{yzbh}
+	</insert>
+	<select id="findyf" resultType="Integer" >
+	select distinct yf from k_yhb1
+	</select>
+	<select id="findType" resultType="yhMessage"  >
+	select distinct  yh.yzbh,yh.yf
+	 from k_yhb1 yh 
+	</select>
+	
+	<update id="updateZq" parameterType="YhMessage">
+	update k_cgzq set zq=#{zq} where xqh=#{xqh},ldh=#{ldh},dyh=#{dyh},ch=#{ch}
+	</update>
+	<select id="findCgzq" resultMap="map" >
+	select distinct c.id, c.xqh,c.ldh,c.dyh,c.zq,c.ch,y.xqm from k_cgzq c,k_yhb1 y where c.xqh=y.xqh
+	</select>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.hot.dao.DjDao">
+	<resultMap type="Dj" id="dj">
+		<id property="id" column="id"/>	
+		<result property="yhlb" column="yhlb"/>
+		<result property="mjdj" column="mjdj"/>
+		<result property="nldj" column="nldj"/>
+		<result property="bz" column="bz"/>
+	</resultMap>
+
+	<select id="findDj" resultMap="dj">
+	select id,yhlb,mjdj,nldj,bz from k_djb7
+	</select>
+	 <insert id="addDj">
+	insert into k_djb7 (yhlb,mjdj,nldj,bz) values(#{yhlb},#{mjdj},#{nldj},#{bz})
+	</insert>
+	<update id="updateDj">
+	update k_djb7 set yhlb=#{yhlb},mjdj=#{mjdj},nldj=#{nldj},bz=#{bz} where id=#{id}
+	</update>
+	<delete id="delete">
+	delete from k_djb7 where id=#{id}
+	</delete> 
+</mapper>

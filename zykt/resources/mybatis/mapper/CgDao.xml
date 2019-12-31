@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.hot.dao.CgDao">
+	<resultMap type="Cg" id="cg">
+		<id property="id" column="id"/>
+		
+		<result property="cgbh" column="cgbh"/>
+		<result property="jzqnet" column="jzqnet"/>
+		<result property="azdz" column="azdz"/>
+		<result property="bz" column="bz"/>
+		<result property="jzqip" column="jzqip" />
+		<result property="jzqport" column="jzqport" />
+		<result property="ldh" column="ldh" />
+		<result property="dyh" column="dyh" />
+	</resultMap>
+
+	<select id="find" resultMap="cg">
+	select distinct cg.id,cg.cgbh,cg.jzqnet,cg.azdz,cg.bz from k_yhb1 yh ,k_cgb3 cg where yh.cgbh=yh.cgbh
+	</select>
+	
+	<insert id="Insert" parameterType="Cg">
+		insert into k_cgb3
+		(cgbh,jzqnet,azdz,bz)
+		values(#{cgbh},#{jzqnet},#{azdz},#{bz})
+	</insert>
+	
+	<delete id="deletecg">
+		delete from k_cgb3
+		where id=#{id}
+	</delete>
+	
+	
+	<update id="update" parameterType="Cg">
+		update k_cgb3 set
+		jzqnet=#{jzqnet},azdz=#{azdz},bz=#{bz}
+		where cgbh=#{cgbh}
+	</update>
+	<!-- 根据层管编号查找楼栋号单元号 -->
+	<select id="findLdDyByCg" parameterType="Cg" resultMap="cg" >
+	select distinct yh.ldh,yh.dyh ,jzq.jzqip,jzq.jzqport
+	from k_yhb1 yh ,k_cgb3 cg ,k_jzqb5 jzq 
+	where yh.cgbh=yh.cgbh and jzq.jzqnet=cg.jzqnet and cg.cgbh=#{cgbh}
+	</select>
+
+</mapper>

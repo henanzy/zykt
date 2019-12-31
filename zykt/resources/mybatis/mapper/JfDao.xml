@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.hot.dao.JfDao">
+	<resultMap type="Jf" id="jf">
+		<id property="id" column="id"/>
+		<result property="yhbh" column="yhbh"/>
+		<result property="jfje" column="jfje"/>
+		<result property="hjje" column="hjje"/>
+	    <result property="syje" column="syje"/> 
+		<result property="time" column="time"/>
+		<result property="yyje" column="yyje"/> 
+		<result property="yzbh" column="yzbh"/> 
+		<result property="getime" column="getime"/> 
+		<result property="type" column="type"/>
+		<result property="typeBz" column="typeBz"/>
+		<result property="startTime" column="startTime"/>
+		<result property="endTime" column="endTime"/>
+		<result property="outtradeno" column="outtradeno"/>				
+		<result property="yydl" column="yydl"/>
+		<result property="userName" column="userName"/> 
+	</resultMap>
+<resultMap id="map" type="java.util.HashMap"></resultMap>
+	<select id="find" resultMap="map">
+	 select distinct top 600 j. yydl, y.yhxm, y.ssgs,
+			y.xqm,y.ldh,y.dyh,y.hh,y.lxdh,j.userName,
+			j.yzbh,j.jfje,j.hjje,CONVERT(varchar(100), j.time, 20) as time,j.yyje,j.syje,y.mj,j.type, 
+			CONVERT(varchar(100), j.endTime, 20)as endTime,CONVERT(varchar(100), j.startTime, 20)as startTime, CONVERT(varchar(100), j.getime, 20)as getime
+		from k_yhb1 y ,k_jfb12 j where j.yzbh=y.yzbh
+		<if test="xqm!=null and xqm!=''">
+		and y.xqm=#{xqm}
+		</if>
+		<if test="ldh!=null and ldh!=''">
+		and y.ldh=#{ldh}
+		</if>
+		<if test="dyh!=null and dyh!=''">
+		and y.dyh=#{dyh}
+		</if>
+		<if test="hh!=null and hh!=''">
+		and y.hh=#{hh}
+		</if>
+		<if test="type!=null and type!=''">
+			and j.type=#{type}
+		</if>
+	</select>
+	
+	<update id="updateJfHjje" parameterType="Jf">
+		update k_jfb12 set
+		jfje=#{jfje},syje=#{syje},hjje=#{hjje},time=#{time},userName=#{userName},type=#{type},startTime=#{startTime},endTime=#{endTime}
+		where yzbh=#{yzbh}
+	</update>
+	
+	<insert id="InsertJfHistory" parameterType="Jf">
+    insert into k_jfbHistory (yzbh,jfje,syje,hjje,time,userName,type,startTime,endTime,outtradeno)
+     values (#{yzbh},#{jfje},#{syje},#{hjje},#{time},#{userName},#{type},#{startTime},#{endTime},#{outtradeno})
+    </insert>
+    
+    
+    <!-- 今日查询缴费笔数  public int findJfbs( ) -->
+	<select id="findJfbs"  resultType="int"    >
+	  SELECT COUNT(jfje) FROM k_jfbHistory WHERE datediff(DD,time,getdate())=0
+	</select>
+	
+	<!-- 今日查询缴费总金额   public Integer findJfzje( ) -->
+  	<select id="findJfzje"     resultType="int"  parameterType="Jf" >
+	 SELECT sum(jfje) FROM k_jfbHistory WHERE datediff(DD,time,getdate())=0
+	</select>  
+	
+	<!-- 本周查询缴费笔数  	public int findBzJfbs( ); -->
+  	<select id="findBzJfbs" resultType="int"   >
+	  SELECT COUNT(jfje) FROM k_jfbHistory WHERE datediff(week,time,getdate())=0
+	</select> 
+	
+	<!-- 本周查询缴费总金额    public Integer findBzJfzje( );-->
+	  <select id="findBzJfzje"  resultType="int"  parameterType="Jf">
+	 SELECT sum(jfje) FROM k_jfbHistory WHERE datediff(week,time,getdate())=0
+	</select> 
+	
+	<select id="findHistory" resultMap="map" parameterType="Jf">
+    execute Jfhistory  
+    </select>
+    
+    <select id="findDj" resultMap="map" >
+    select ssms,dj from k_fyfl where fl!='基本费单价'and fl!='能量费单价'	 
+    </select>
+   <!-- 更新用户费用 -->
+	<update id="updateJf" parameterType="Jf">
+	update k_jfb12 set  yyje=#{yyje} ,getime=#{getime},yydl=#{yydl} where yzbh=#{yzbh} 
+	</update>
+	<select id="selSyje"  resultType="Double"  parameterType="Jf">
+	 select syje from k_jfb12 where yzbh=#{yzbh}
+	</select>
+</mapper>

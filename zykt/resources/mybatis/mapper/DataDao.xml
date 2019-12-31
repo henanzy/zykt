@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.hot.dao.DataDao">
+	<resultMap type="Data" id="data">
+		<result property="id" column="id" />
+		<result property="fpbh" column="fpbh" />
+		<result property="ms" column="ms" />
+		<result property="dw" column="dw" />
+		<result property="gdtime" column="gdtime" />
+		<result property="zdtime" column="zdtime" />
+		<result property="ddtime" column="ddtime" />
+		<result property="dgdtime" column="dgdtime" />
+		<result property="dzdtime" column="dzdtime" />
+		<result property="dddtime" column="dddtime" />
+		
+		<result property="yydl" column="yydl" />
+		<result property="syje" column="syje" />
+		<result property="yyje" column="yyje" />
+		<result property="jbf" column="jbf" />
+		<result property="nlf" column="nlf" />
+		<result property="yf" column="yf" />
+		
+		<result property="yydlS" column="yydlS" />
+		<result property="syjeS" column="syjeS" />
+		<result property="jbfS" column="jbfS" />
+		<result property="nlfS" column="nlfS" />
+		
+		<result property="jf" column="jf" />
+		<result property="sdwd" column="sdwd" />
+		<result property="snwd" column="snwd" />
+		<result property="kg" column="kg" />
+		<result property="bj" column="bj" />
+		<result property="jj" column="jj" />
+		<result property="time" column="time" />
+		<result property="xyydl" column="xyydl" />
+		<result property="yhbh" column="yhbh" />
+		<result property="fpdz" column="fpdz" />
+		
+
+		<result property="yhbh" column="yhbh" />
+		<result property="yhxm" column="yhxm"/>
+		<result property="ssgs" column="ssgs" />
+		<result property="xqm" column="xqm" />
+		<result property="ldh" column="ldh" />
+		<result property="dyh" column="dyh" />
+		<result property="hh" column="hh" />
+		<result property="mj" column="mj" />
+		<result property="fpdz" column="fpdz" />
+		<result property="bz" column="bz" />
+		<result property="yhlx" column="yhlx" />
+		<result property="lxdh" column="lxdh" />
+		<result property="yzbh" column="yzbh" />
+		<result property="cgbh" column="cgbh" />
+		
+		<result property="xh" column="xh" />
+		<result property="xgkw" column="xgkw" />
+		<result property="xzkw" column="xzkw" />
+		<result property="xdkw" column="xdkw" />
+		<result property="dgkw" column="dgkw" />
+		<result property="dzkw" column="dzkw" />
+		<result property="ddkw" column="ddkw" />
+		<result property="bz" column="bz" />
+		<result property="syje" column="syje"></result><!--缴费表 剩余金额 -->
+		<result property="yyje" column="yyje"></result><!--缴费表 剩余金额 -->
+		<result property="hjje" column="hjje"></result><!--缴费表 剩余金额 -->
+		<result property="jzqnet" column="jzqnet" />
+		<result property="jzqip" column="jzqip" />
+		<result property="jzqport" column="jzqport" />
+		<result property="azdz" column="azdz" />
+	    <result property="yhMessage.id" column="id" />
+		<result property="yhMessage.yhbh" column="yhbh" />
+		<result property="yhMessage.xqh" column="xqh"/>
+		<result property="yhMessage.ldh" column="ldh" />
+		<result property="yhMessage.dyh" column="dyh" />
+		<result property="yhMessage.cgbh" column="cgbh" />
+		<result property="yhMessage.yf" column="yf" />
+		<result property="yhMessage.fpxh" column="fpxh" />
+	</resultMap>
+	
+	<resultMap id="map" type="java.util.HashMap"></resultMap>
+    <select id="findYh"  resultMap="data"   parameterType="Data">
+  	select distinct
+ 	         da.gdtime*gl.xgkw+da.zdtime*gl.xzkw+da.ddtime*gl.xdkw
+            +da.dgdtime*gl.dgkw+ da.dzdtime*gl.dzkw +da.dddtime*gl.ddkw as yydlS,
+		 	yh.yf,yh.yzbh,yh.ldh,yh.dyh,yh.cgbh
+		from 
+		 	k_data10  da, 
+		 	k_yhb1  yh, 
+		 	k_fpb2 fp,  
+		 	k_glb6  gl,
+			K_djb7 dj 
+	    where 
+		 	  	yh.yhbh=da.yhbh and yh.fpdz=da.fpdz  
+		 		and  da.yhbh=fp.yhbh 
+				and fp.xh=gl.xh and dj.yhlb=yh.yhlx
+		 		and yh.yhbh=#{yhbh} and yh.fpdz=#{fpdz}
+   </select>
+   
+   
+   
+   <update id="updateJf" parameterType="Data">
+       update k_data10 
+       set yydl=#{yydl}
+       where yhbh=#{yhbh} and fpdz=#{fpdz}
+   </update>
+	<!-- 首页显示信息-->
+	
+    <select id="find"   resultMap="map"   >
+	select 
+		 	yh.id,
+		 	yh.yhbh,yh.yhxm,yh.ssgs,yh.xqm,yh.ldh,yh.dyh,yh.hh,yh.xqh,
+		 	da.yydl,
+		 	da.fpbh,da.ms,yh.fpdz,yh.lxdh,yh.bz,
+		 	da.dw,da.gdtime,da.zdtime,da.ddtime,da.dgdtime,da.dzdtime,da.dddtime,
+		 	da.jf,da.sdwd,da.snwd,da.kg,da.bj,da.jj,da.time,
+		 	yh.mj,yh.yf,jf.syje,jf.yyje,jf.hjje,yh.sfjf
+		from 
+		 	k_data10  da, 
+		 	k_yhb1  yh,
+		 	k_jfb12 jf
+	     where 
+		 	  yh.yhbh=da.yhbh and yh.fpdz=da.fpdz
+		 	 and jf.yhbh=yh.yhbh  
+		 <if test="xqm!=''">
+			and yh.xqm=#{xqm}
+		</if>
+		<if test="ldh!=''">
+			and yh.ldh=#{ldh}
+		</if>
+		<if test="dyh!=''">
+			and yh.dyh=#{dyh}
+		</if>
+		<if test="hh!=''">
+			and yh.hh=#{hh}
+		</if>
+		order by yh.yhbh asc
+		
+		
+	</select> 
+	
+	
+	<select id="finds"   resultMap="map"   >
+	select distinct top 1000
+		 	yh.id,
+		 	yh.yhbh,yh.yhxm,yh.ssgs,yh.xqm,yh.ldh,yh.dyh,yh.hh,yh.xqh,
+		 	da.yydl,
+		 	da.fpbh,da.ms,yh.fpdz,yh.lxdh,yh.bz,
+		 	da.dw,da.gdtime,da.zdtime,da.ddtime,da.dgdtime,da.dzdtime,da.dddtime,
+		 	da.jf,da.sdwd,da.snwd,da.kg,da.bj,da.jj,da.time,
+		 	yh.mj,yh.yf,jf.syje,jf.yyje,jf.hjje,yh.sfjf
+		from 
+		 	k_data10  da, 
+		 	k_yhb1  yh,
+		 	k_jfb12 jf
+	     where 
+		 	  yh.yhbh=da.yhbh and yh.fpdz=da.fpdz
+		 	 and jf.yhbh=yh.yhbh  
+		order by yh.xqh asc
+	</select>
+	
+	<select id="searchInfo" resultMap="map" >
+      
+		execute findInfo #{xqm},#{ldh},#{dyh},#{hh},#{time1},#{time2}
+	</select>
+	
+	
+	<select id="findData" resultMap="data"   parameterType="Data" >
+		select   yh.yhbh,yh.ldh,yh.dyh,yh.cgbh,yh.xqh,yh.fpxh,
+		 	da.fpbh,da.ms,yh.fpdz,da.yydl,
+		 	da.dw,da.jf,da.sdwd,da.snwd,da.kg,da.bj,da.jj
+		 from k_data10 da, 	k_yhb1  yh  
+		 where   yh.yhbh=da.yhbh and yh.fpdz=da.fpdz and yh.yhbh=#{yhbh} and yh.fpdz=#{fpdz}
+	</select>
+	<!-- 搜索 历史数据-->
+	<select id="searchHistory" resultMap="data"   parameterType="Data">
+     select distinct top 500
+		 	yh.id,
+		 	yh.yhbh,yh.yhxm,yh.ssgs,yh.xqm,yh.ldh,yh.dyh,yh.hh,
+		    da.yydl,
+		 	da.fpbh,da.ms,yh.fpdz,yh.lxdh,yh.bz,
+		 	da.dw,da.gdtime,da.zdtime,da.ddtime,da.dgdtime,da.dzdtime,da.dddtime,
+		 	da.jf,da.sdwd,da.snwd,da.kg,da.bj,da.jj,da.time,
+		 	yh.mj
+		from 
+		 	k_lssjb11  da, 
+		 	k_yhb1  yh, 
+		 
+	   
+	   where 
+		 	  yh.yhbh=da.yhbh and yh.fpdz=da.fpdz  
+	 	<if test="xqm!=''">
+			and yh.xqm=#{xqm}
+		</if>
+		<if test="ldh!=''">
+			and yh.ldh=#{ldh}
+		</if>
+		<if test="dyh!=''">
+			and yh.dyh=#{dyh}
+		</if>
+		<if test="hh!=''">
+			and yh.hh=#{hh}
+		</if>
+		<if test="time1!=null and time1!=''">
+			and da.time &gt;= #{time1}
+		</if>
+		<if test="time2!=null and time2!=''">
+			and da.time &lt;= #{time2}
+		</if> 
+		order by da.time desc  
+	</select>
+	
+	<!-- public Data  findf(String address); -->
+	<select  id="findf"  resultMap="data"   parameterType="Data">
+	select  
+			* 
+	from  
+			k_data10 
+	</select>
+
+
+	<!--根据用户编号更新 public  void updateS(String fpbh) -->
+	 <update  id="updateS" parameterType="Data" >
+	 update 
+	 	 k_data10  
+	 set  
+	 	 ms=#{ms},
+	 	 dw=#{dw},
+	 	 gdtime=#{gdtime},
+	 	 zdtime=#{zdtime},
+	 	 ddtime=#{ddtime},
+	 	 dgdtime=#{dgdtime},
+	 	 dzdtime=#{dzdtime},
+	 	 dddtime=#{dddtime},
+	 	 jf=#{jf},
+	 	 sdwd=#{sdwd},
+	 	 snwd=#{snwd},
+	 	 kg=#{kg},
+	 	 bj=#{bj},
+	 	 jj=#{jj},
+	 	 time=#{time},
+	 where 
+	 	fpbh=#{fpbh}
+	 </update>
+	 
+	 <update id="updateYhbhF" parameterType="Data">
+	 	execute updateYh #{ms},
+	 	 #{dw},
+	 	#{gdtime},
+	 	#{zdtime},
+	 	#{ddtime},
+	 	 #{dgdtime},
+	 	 #{dzdtime},
+	 	 #{dddtime},
+	 	 #{jf},
+	 	 #{sdwd},
+	 	 #{snwd},
+	 	 #{kg},
+	 	 #{bj},
+	 	 #{jj},
+	 	 #{time},
+	 	 #{yhbh},
+	 	 #{fpdz},
+	 	 #{yydl}
+	 </update>
+	 
+	 <insert id="InsertYh" parameterType="Data">
+	 <!-- socket更插入历史热表信息 -->
+     insert into k_lssjb11 (fpbh,yhbh,fpdz,ms,dw,gdtime,zdtime,ddtime,dgdtime,dzdtime,dddtime,jf,sdwd,snwd,kg,bj,jj,time,
+     yydl,yf
+     )values (
+      #{fpbh},#{yhbh},#{fpdz},#{ms},#{dw},#{gdtime},#{zdtime},#{ddtime},#{dgdtime},#{dzdtime},#{dddtime},#{jf},#{sdwd},#{snwd},
+      #{kg},#{bj},#{jj},#{time},#{yydl} ,#{yf})
+	 </insert>
+
+	 <insert id="InsertYhSSb" parameterType="Data">
+	 <!-- socket更插入历史热表信息 -->
+     insert into k_data10 (fpbh,yhbh,fpdz,ms,dw,gdtime,zdtime,ddtime,dgdtime,dzdtime,dddtime,jf,sdwd,snwd,kg,bj,jj,time,
+     yydl,syje,yyje,jbf ,nlf
+     )values (
+      #{fpbh},#{yhbh},#{fpdz},#{ms},#{dw},#{gdtime},#{zdtime},#{ddtime},#{dgdtime},#{dzdtime},#{dddtime},#{jf},#{sdwd},#{snwd},
+      #{kg},#{bj},#{jj},#{time},#{yydl} ,#{syje} ,#{yyje} ,#{jbf} , #{nlf} )
+	 </insert>
+	 
+	 <!-- 异常查询 搜索 public List<Data> Search(@Param("bj") String bj) -->
+	 <select id="SearchYc"  resultMap="map"   parameterType="Data">
+    	select distinct top 1500
+		 	yh.id,
+		 	yh.yhbh,yh.yhxm,yh.ssgs,yh.xqm,yh.ldh,yh.dyh,yh.hh,
+		 	da.yydl,
+		 	da.fpbh,da.ms,yh.fpdz,yh.lxdh,yh.bz,
+		 	da.dw,da.gdtime,da.zdtime,da.ddtime,da.dgdtime,da.dzdtime,da.dddtime,
+		 	da.jf,da.sdwd,da.snwd,da.kg,da.bj,da.jj,da.time,
+		 	yh.mj,yh.yf,jf.syje,jf.yhbh
+		from 
+		 	k_data10  da, 
+		 	k_yhb1  yh,
+		 	k_jfb12 jf
+	     where 
+		 	  yh.yhbh=da.yhbh and yh.fpdz=da.fpdz
+		 	and  jf.yhbh=yh.yhbh
+		
+			<if test="bj!=null and bj!=''" >
+			and da.bj=#{bj}
+			</if> 
+			order by da.time desc  
+	</select>
+	<!-- 异常查询 历史数据搜索 -->
+	 <select id="SearchHistoryYc" resultMap="data"   parameterType="Data">
+    	select distinct top 500
+			 	yh.id,
+			 	yh.yhbh,yh.yhxm,yh.ssgs,yh.xqm,yh.ldh,yh.dyh,yh.hh,
+			    da.yydl,
+			 	da.fpbh,da.ms,yh.fpdz,yh.lxdh,yh.bz,
+			 	da.dw,da.gdtime,da.zdtime,da.ddtime,da.dgdtime,da.dzdtime,da.dddtime,
+			 	da.jf,da.sdwd,da.snwd,da.kg,da.bj,da.jj,da.time,
+		 		yh.mj
+		from 
+		 		k_lssjb11  da, 
+		 		k_yhb1  yh, 
+		 		k_fpb2 fp,  
+		 		k_glb6  gl 
+	    where 
+		 	 yh.yhbh=da.yhbh
+		 	 and yh.fpdz=da.fpdz  
+			 and da.fpbh=fp.fpbh 
+			 and fp.xh=gl.xh 
+		<if test="xqm!='--选择小区名称--'">
+			and yh.xqm=#{xqm}
+		</if>
+		<if test="ldh!=0">
+			and yh.ldh=#{ldh}
+		</if>
+		<if test="dyh!=0">
+			and yh.dyh=#{dyh}
+		</if>
+		<if test="hh!=0">
+			and yh.hh=#{hh}
+		</if>
+		and da.bj=#{bj}
+		
+	 order by da.time desc 
+			 
+	</select>
+	
+	<update id="update"  parameterType="Data">
+	update k_data10 set bj=#{bj} where yhbh=#{yhbh} and fpdz=#{fpdz}
+	</update>
+	<select id="TxycNum" resultType="int" parameterType="Data">
+	select count(*)
+		from 
+		 	k_data10
+	   where 
+	 	time &lt;= #{time}
+
+	</select>
+	<select id="DrycNum" resultType="int" parameterType="Data">
+	select count(*)
+		from 
+		 	k_data10
+	    where 
+	   	bj=#{bj}
+	</select>
+	<select id="findZyydl" resultType="data"  parameterType="Data">
+	 select sum(distinct yydl) zyydl,yh.yzbh,yh.yf from k_data10 da ,k_yhb1 yh 
+	 where da.yhbh=yh.yhbh and yh.yhbh=#{yzbh} group by yzbh,yf
+	</select>
+	
+	<select id="findyydl" resultType="double"  parameterType="Data">
+	select yydl where yhbh=#{yhbh},fpdz=#{fpdz}
+	</select>
+	<update id="updateSbJs"   parameterType="Data">
+	 update k_data10 set kg=#{kg},jf=#{jf},jj=#{jj},time= #{time}
+	  where 1=1
+	 
+	   <if test="yhbh!=null and yhbh!=''">
+			and  yhbh=#{yhbh}
+		</if>
+		<if test="fpdz!=null and fpdz!=''">
+			and fpdz=#{fpdz}
+		</if>
+	</update>
+	<update id="updatebj"   parameterType="Data">
+	 update k_data10 set bj=#{bj} where yhbh=#{yhbh} and fpdz=#{fpdz}
+	</update>
+	
+	<select id="findFpNum" resultType="java.lang.Integer"  >
+select   COUNT( y.fpdz) from k_data10 d,dbo.k_yhb1 y 
+where d.yhbh=y.yhbh and y.fpdz=d.fpdz and DATEDIFF(d,DAY(time),DAY(GETDATE()))=0 
+ and d.dw!='00'
+<if test="xqm!=null and xqm!=''">
+			and xqm=#{xqm}
+		</if>
+	</select>
+	<select id="findYhNum" resultType="java.lang.Integer"  >
+select   COUNT(distinct y.yhbh) from k_data10 d,dbo.k_yhb1 y 
+where d.yhbh=y.yhbh and y.fpdz=d.fpdz and DATEDIFF(d,DAY(time),DAY(GETDATE()))=0 
+and d.dw!='00'
+<if test="xqm!=null and xqm!=''">
+			and xqm=#{xqm}
+		</if>
+	</select>
+	<select id="findYhSy"  resultMap="map">
+select distinct 
+		 	yh.id,
+		 	yh.yhbh,yh.yhxm,yh.ssgs,yh.xqm,yh.ldh,yh.dyh,yh.hh,yh.xqh,
+		 	da.yydl,
+		 	da.fpbh,da.ms,yh.fpdz,yh.lxdh,yh.bz,
+		 	da.dw,da.gdtime,da.zdtime,da.ddtime,da.dgdtime,da.dzdtime,da.dddtime,
+		 	da.jf,da.sdwd,da.snwd,da.kg,da.bj,da.jj,da.time,
+		 	yh.mj,yh.yf,jf.syje,jf.yyje,jf.hjje
+		from 
+		 	k_data10  da, 
+		 	k_yhb1  yh,
+		 	k_jfb12 jf
+	     where 
+		 	  yh.yhbh=da.yhbh and yh.fpdz=da.fpdz
+		 	 and jf.yhbh=yh.yhbh 
+		 	 and DATEDIFF(d,DAY(da.time),DAY(GETDATE()))=0 
+             and da.dw!='00' 
+             <if test="xqm!=null and xqm!=''">
+			and xqm=#{xqm}
+		</if>
+	</select>
+</mapper>

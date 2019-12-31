@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.hot.dao.FpDao">
+	<resultMap type="Fp" id="fp">
+		<id property="id" column="id"/>	
+		<result property="fpbh" column="fpbh"/>
+		<result property="yhbh" column="yhbh"/>
+		<result property="xh" column="xh"/>
+		<result property="wz" column="wz"/>
+		<result property="bz" column="bz"/>
+	</resultMap>
+
+	<select id="findFp" resultMap="fp">
+	select top 1000 id,fpbh,yhbh,xh,wz,bz from k_fpb2
+	</select>
+	 <insert id="addFp">
+	insert into k_fpb2 (fpbh,yhbh,xh,wz,bz) values(#{fpbh},#{yhbh},#{xh},#{wz},#{bz})
+	</insert>
+	<update id="updateFp">
+	update k_fpb2 set fpbh=#{fpbh},yhbh=#{yhbh},xh=#{xh},wz=#{wz},bz=#{bz} where id=#{id}
+	</update>
+	<delete id="deleteFp">
+	delete from k_fpb2 where id=#{id}
+	</delete> 
+</mapper>

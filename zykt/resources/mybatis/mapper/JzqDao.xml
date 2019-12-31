@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.hot.dao.JzqDao">
+	<resultMap type="Jzq" id="jzq">
+		<id property="id" column="id"/>	
+		<result property="jzqnet" column="jzqnet"/>
+		<result property="jzqip" column="jzqip"/>
+		<result property="jzqport" column="jzqport"/>
+		<result property="azdz" column="azdz"/>
+		<result property="updateTime" column="updateTime"/>
+	</resultMap>
+
+	<select id="find" resultMap="jzq">
+	select id,jzqnet,jzqip,jzqport,azdz, updateTime from k_jzqb5
+	</select>
+	<insert id="addJzq">
+	insert into k_jzqb5 (jzqnet,jzqip,jzqport,azdz) values(#{jzqnet},#{jzqip},#{jzqport},#{azdz})
+	</insert>
+	<update id="updateJzq">
+	update k_jzqb5 set jzqip=#{jzqip},jzqport=#{jzqport},azdz=#{azdz} where jzqnet=#{jzqnet}
+	</update>
+	<delete id="deleteJzq">
+	delete from k_jzqb5 where jzqnet=#{jzqnet}
+	</delete>
+	<update id="updateIpPort" parameterType="Jzq">
+	update k_jzqb5 set jzqport=#{jzqport},jzqip=#{jzqip},UpdateTime=#{updateTime} where jzqnet=#{jzqnet}
+	</update>
+</mapper>
